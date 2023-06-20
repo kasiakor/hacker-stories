@@ -27,16 +27,22 @@ function App() {
     <div>
       <h1>My car collection</h1>
       <hr />
-      <ul>
-        {list.map((car) => (
-          <li key={car.cardId}>
-            <span>{car.type}, </span>
-            <span>{car.color}, </span>
-            <span>{car.capacity}</span>
-          </li>
-        ))}
-      </ul>
+      <List />
     </div>
+  );
+}
+
+function List() {
+  return (
+    <ul>
+      {list.map((car) => (
+        <li key={car.cardId}>
+          <span>{car.type}, </span>
+          <span>{car.color}, </span>
+          <span>{car.capacity}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
 
