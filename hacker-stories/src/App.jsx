@@ -26,6 +26,7 @@ function App() {
   return (
     <div>
       <h1>My car collection</h1>
+      <Search />
       <hr />
       <List />
     </div>
@@ -43,6 +44,15 @@ function List() {
         </li>
       ))}
     </ul>
+  );
+}
+
+function Search() {
+  return (
+    <div>
+      <label htmlFor="search">Search: </label>
+      <input id="search" type="text" />
+    </div>
   );
 }
 
