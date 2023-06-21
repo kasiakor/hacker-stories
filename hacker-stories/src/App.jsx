@@ -22,38 +22,32 @@ const list = [
   },
 ];
 
-function App() {
-  return (
-    <div>
-      <h1>My car collection</h1>
-      <Search />
-      <hr />
-      <List />
-    </div>
-  );
-}
+const App = () => (
+  <div>
+    <h1>My car collection</h1>
+    <Search />
+    <hr />
+    <List />
+  </div>
+);
 
-function List() {
-  return (
-    <ul>
-      {list.map((car) => (
-        <li key={car.cardId}>
-          <span>{car.type}, </span>
-          <span>{car.color}, </span>
-          <span>{car.capacity}</span>
-        </li>
-      ))}
-    </ul>
-  );
-}
+const List = () => (
+  <ul>
+    {list.map((car) => (
+      <li key={car.cardId}>
+        <span>{car.type}, </span>
+        <span>{car.color}, </span>
+        <span>{car.capacity}</span>
+      </li>
+    ))}
+  </ul>
+);
 
-function Search() {
-  return (
-    <div>
-      <label htmlFor="search">Search: </label>
-      <input id="search" type="text" />
-    </div>
-  );
-}
+const Search = () => (
+  <div>
+    <label htmlFor="search">Search: </label>
+    <input id="search" type="text" />
+  </div>
+);
 
 export default App;
