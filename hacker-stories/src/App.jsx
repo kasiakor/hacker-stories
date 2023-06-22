@@ -35,14 +35,22 @@ const App = () => {
 const List = (props) => (
   <ul>
     {/* eslint-disable-next-line react/prop-types */}
-    {props.list.map((car) => (
-      <li key={car.cardId}>
-        <span>{car.type}, </span>
-        <span>{car.color}, </span>
-        <span>{car.capacity}</span>
-      </li>
+    {props.list.map((item) => (
+      <Item key={item.cardId} item={item} />
     ))}
+    ;
   </ul>
+);
+
+const Item = (props) => (
+  <li>
+    {/* eslint-disable-next-line react/prop-types */}
+    <span>{props.item.type}</span>
+    {/* eslint-disable-next-line react/prop-types */}
+    <span>{props.item.color} </span>
+    {/* eslint-disable-next-line react/prop-types */}
+    <span>{props.item.capacity}</span>
+  </li>
 );
 
 const Search = () => {
