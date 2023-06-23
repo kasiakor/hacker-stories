@@ -2,6 +2,7 @@
 import * as React from "react";
 
 const App = () => {
+  console.log("App renders");
   const stories = [
     {
       color: "purple",
@@ -32,31 +33,40 @@ const App = () => {
   );
 };
 
-const List = (props) => (
-  <ul>
-    {/* eslint-disable-next-line react/prop-types */}
-    {props.list.map((item) => (
-      <Item key={item.cardId} item={item} />
-    ))}
-    ;
-  </ul>
-);
+const List = (props) => {
+  console.log("List renders");
+  return (
+    <ul>
+      {/* eslint-disable-next-line react/prop-types */}
+      {props.list.map((item) => (
+        <Item key={item.cardId} item={item} />
+      ))}
+      ;
+    </ul>
+  );
+};
 
-const Item = (props) => (
-  <li>
-    {/* eslint-disable-next-line react/prop-types */}
-    <span>{props.item.type}</span>
-    {/* eslint-disable-next-line react/prop-types */}
-    <span>{props.item.color} </span>
-    {/* eslint-disable-next-line react/prop-types */}
-    <span>{props.item.capacity}</span>
-  </li>
-);
+const Item = (props) => {
+  console.log("Item renders");
+  return (
+    <li>
+      {/* eslint-disable-next-line react/prop-types */}
+      <span>{props.item.type}</span>
+      {/* eslint-disable-next-line react/prop-types */}
+      <span>{props.item.color} </span>
+      {/* eslint-disable-next-line react/prop-types */}
+      <span>{props.item.capacity}</span>
+    </li>
+  );
+};
 
 const Search = () => {
+  console.log("Search renders");
+  const [searchTerm, setSearchTerm] = React.useState("");
+
   const handleChange = (event) => {
-    console.log(event);
-    console.log(event.target.value);
+    setSearchTerm(event.target.value);
+    console.log(searchTerm);
   };
 
   const handleBlur = (event) => {
@@ -72,6 +82,7 @@ const Search = () => {
         onChange={handleChange}
         onBlur={handleBlur}
       />
+      <div>{searchTerm}</div>
     </div>
   );
 };
