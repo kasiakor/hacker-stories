@@ -79,19 +79,10 @@ const Search = (props) => {
   console.log("Search renders");
   console.log("search term from Search", props.myTerm);
 
-  const handleBlur = (event) => {
-    console.log(event);
-    console.log(event.target.value);
-  };
   return (
     <div>
       <label htmlFor="search">Search: </label>
-      <input
-        id="search"
-        type="text"
-        onChange={props.onSearch}
-        onBlur={handleBlur}
-      />
+      <input id="search" type="text" onChange={props.onSearch} />
     </div>
   );
 };
