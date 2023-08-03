@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
 import * as React from "react";
 
@@ -24,6 +25,8 @@ const App = () => {
     },
   ];
 
+  const [searchTerm, setSearchTerm] = React.useState("");
+
   // callback handler
 
   const handleSearch = (event) => {
@@ -31,12 +34,14 @@ const App = () => {
       "event value passed by handler from child to parent:",
       event.target.value
     );
+    setSearchTerm(event.target.value);
+    console.log("search term from App", searchTerm);
   };
 
   return (
     <div>
       <h1>My car collection</h1>
-      <Search onSearch={handleSearch} />
+      <Search onSearch={handleSearch} myTerm={searchTerm} />
       <hr />
       <List list={stories} />
     </div>
@@ -72,15 +77,7 @@ const Item = (props) => {
 
 const Search = (props) => {
   console.log("Search renders");
-  const [searchTerm, setSearchTerm] = React.useState("");
-
-  const handleChange = (event) => {
-    setSearchTerm(event.target.value);
-    console.log(searchTerm);
-
-    // eslint-disable-next-line react/prop-types
-    props.onSearch(event);
-  };
+  console.log("search term from Search", props.myTerm);
 
   const handleBlur = (event) => {
     console.log(event);
@@ -92,10 +89,9 @@ const Search = (props) => {
       <input
         id="search"
         type="text"
-        onChange={handleChange}
+        onChange={props.onSearch}
         onBlur={handleBlur}
       />
-      <div>{searchTerm}</div>
     </div>
   );
 };
