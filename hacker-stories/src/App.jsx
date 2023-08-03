@@ -27,6 +27,10 @@ const App = () => {
 
   const [searchTerm, setSearchTerm] = React.useState("");
 
+  const filteredStories = stories.filter((story) =>
+    story.type.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   // callback handler
 
   const handleSearch = (event) => {
@@ -43,20 +47,19 @@ const App = () => {
       <h1>My car collection</h1>
       <Search onSearch={handleSearch} myTerm={searchTerm} />
       <hr />
-      <List list={stories} />
+      <List list={filteredStories} />
     </div>
   );
 };
 
 const List = (props) => {
-  console.log("List renders");
+  console.log("List after filter", props.list);
   return (
     <ul>
       {/* eslint-disable-next-line react/prop-types */}
       {props.list.map((item) => (
         <Item key={item.cardId} item={item} />
       ))}
-      ;
     </ul>
   );
 };
@@ -67,8 +70,10 @@ const Item = (props) => {
     <li>
       {/* eslint-disable-next-line react/prop-types */}
       <span>{props.item.type}</span>
+      <br />
       {/* eslint-disable-next-line react/prop-types */}
       <span>{props.item.color} </span>
+      <br />
       {/* eslint-disable-next-line react/prop-types */}
       <span>{props.item.capacity}</span>
     </li>
