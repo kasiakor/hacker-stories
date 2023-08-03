@@ -23,10 +23,20 @@ const App = () => {
       cardId: 3,
     },
   ];
+
+  // callback handler
+
+  const handleSearch = (event) => {
+    console.log(
+      "event value passed by handler from child to parent:",
+      event.target.value
+    );
+  };
+
   return (
     <div>
       <h1>My car collection</h1>
-      <Search />
+      <Search onSearch={handleSearch} />
       <hr />
       <List list={stories} />
     </div>
@@ -60,13 +70,16 @@ const Item = (props) => {
   );
 };
 
-const Search = () => {
+const Search = (props) => {
   console.log("Search renders");
   const [searchTerm, setSearchTerm] = React.useState("");
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
     console.log(searchTerm);
+
+    // eslint-disable-next-line react/prop-types
+    props.onSearch(event);
   };
 
   const handleBlur = (event) => {
