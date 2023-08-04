@@ -83,16 +83,12 @@ const Item = (props) => {
 const Search = (props) => {
   console.log("Search renders");
   console.log("search term from Search", props.myTerm);
+  const { myTerm, onSearch } = props;
 
   return (
     <div>
       <label htmlFor="search">Search: </label>
-      <input
-        id="search"
-        type="text"
-        value={props.myTerm}
-        onChange={props.onSearch}
-      />
+      <input id="search" type="text" value={myTerm} onChange={onSearch} />
     </div>
   );
 };
