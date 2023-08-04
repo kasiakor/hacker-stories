@@ -58,24 +58,24 @@ const List = ({ list }) => {
     <ul>
       {/* eslint-disable-next-line react/prop-types */}
       {list.map((item) => (
-        <Item key={item.cardId} item={item} />
+        <Item key={item.cardId} {...item} />
       ))}
     </ul>
   );
 };
 
-const Item = ({ item }) => {
-  console.log("Item renders");
+const Item = ({ type, color, capacity }) => {
+  console.log("Item renders type", type);
   return (
     <li>
       {/* eslint-disable-next-line react/prop-types */}
-      <span>{item.type}</span>
+      <span>{type}</span>
       <br />
       {/* eslint-disable-next-line react/prop-types */}
-      <span>{item.color} </span>
+      <span>{color} </span>
       <br />
       {/* eslint-disable-next-line react/prop-types */}
-      <span>{item.capacity}</span>
+      <span>{capacity}</span>
     </li>
   );
 };
