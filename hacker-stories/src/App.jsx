@@ -52,38 +52,37 @@ const App = () => {
   );
 };
 
-const List = (props) => {
-  console.log("List after filter", props.list);
+const List = ({ list }) => {
+  console.log("List after filter", list);
   return (
     <ul>
       {/* eslint-disable-next-line react/prop-types */}
-      {props.list.map((item) => (
+      {list.map((item) => (
         <Item key={item.cardId} item={item} />
       ))}
     </ul>
   );
 };
 
-const Item = (props) => {
+const Item = ({ item }) => {
   console.log("Item renders");
   return (
     <li>
       {/* eslint-disable-next-line react/prop-types */}
-      <span>{props.item.type}</span>
+      <span>{item.type}</span>
       <br />
       {/* eslint-disable-next-line react/prop-types */}
-      <span>{props.item.color} </span>
+      <span>{item.color} </span>
       <br />
       {/* eslint-disable-next-line react/prop-types */}
-      <span>{props.item.capacity}</span>
+      <span>{item.capacity}</span>
     </li>
   );
 };
 
-const Search = (props) => {
+const Search = ({ myTerm, onSearch }) => {
   console.log("Search renders");
-  console.log("search term from Search", props.myTerm);
-  const { myTerm, onSearch } = props;
+  console.log("search term from Search", myTerm);
 
   return (
     <div>
