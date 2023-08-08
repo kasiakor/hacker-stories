@@ -25,7 +25,9 @@ const App = () => {
     },
   ];
 
-  const [searchTerm, setSearchTerm] = React.useState("react");
+  const [searchTerm, setSearchTerm] = React.useState(
+    localStorage.getItem("search") || "react"
+  );
 
   const filteredStories = stories.filter((story) =>
     story.type.toLowerCase().includes(searchTerm.toLowerCase())
@@ -40,6 +42,9 @@ const App = () => {
     );
     setSearchTerm(event.target.value);
     console.log("search term from App", searchTerm);
+
+    // localstorage
+    localStorage.setItem("search", event.target.value);
   };
 
   return (
@@ -65,7 +70,7 @@ const List = ({ list }) => {
 };
 
 const Item = ({ item }) => {
-  console.log("Item renders");
+  console.log("Item rendered", item);
   return (
     <li>
       {/* eslint-disable-next-line react/prop-types */}
