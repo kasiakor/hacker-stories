@@ -26,7 +26,7 @@ const App = () => {
   ];
 
   const [searchTerm, setSearchTerm] = React.useState(
-    localStorage.getItem("search") || "react"
+    localStorage.getItem("search") ?? "react"
   );
 
   const filteredStories = stories.filter((story) =>
@@ -36,16 +36,14 @@ const App = () => {
   // callback handler
 
   const handleSearch = (event) => {
-    console.log(
-      "event value passed by handler from child to parent:",
-      event.target.value
-    );
     setSearchTerm(event.target.value);
-    console.log("search term from App", searchTerm);
-
     // localstorage
-    localStorage.setItem("search", event.target.value);
   };
+
+  React.useEffect(() => {
+    localStorage.setItem("search", searchTerm);
+    console.log("effect search", searchTerm);
+  }, [searchTerm]);
 
   return (
     <div>
