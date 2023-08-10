@@ -3,7 +3,6 @@
 import * as React from "react";
 
 const App = () => {
-  console.log("App renders");
   const stories = [
     {
       color: "purple",
@@ -37,18 +36,21 @@ const App = () => {
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
-    // localstorage
   };
 
   React.useEffect(() => {
     localStorage.setItem("search", searchTerm);
-    console.log("effect search", searchTerm);
   }, [searchTerm]);
 
   return (
     <div>
       <h1>My car collection</h1>
-      <Search onSearch={handleSearch} myTerm={searchTerm} />
+      <InputWithLabel
+        id="search"
+        label="Search"
+        onSearch={handleSearch}
+        value={searchTerm}
+      />
       <hr />
       <List list={filteredStories} />
     </div>
@@ -56,7 +58,6 @@ const App = () => {
 };
 
 const List = ({ list }) => {
-  console.log("List after filter", list);
   return (
     <ul>
       {/* eslint-disable-next-line react/prop-types */}
@@ -68,7 +69,6 @@ const List = ({ list }) => {
 };
 
 const Item = ({ item }) => {
-  console.log("Item rendered", item);
   return (
     <li>
       {/* eslint-disable-next-line react/prop-types */}
@@ -82,15 +82,13 @@ const Item = ({ item }) => {
     </li>
   );
 };
-
-const Search = ({ myTerm, onSearch }) => {
-  console.log("Search renders");
-  console.log("search term from Search", myTerm);
-
+//type is set as default parameter, if it is not passed from the parent
+const InputWithLabel = ({ id, label, value, type = "text", onSearch }) => {
+  console.log("type is:", type);
   return (
     <>
-      <label htmlFor="search">Search: </label>
-      <input id="search" type="text" value={myTerm} onChange={onSearch} />
+      <label htmlFor={id}>{label}:</label>
+      <input id={id} type={type} value={value} onChange={onSearch} />
     </>
   );
 };
