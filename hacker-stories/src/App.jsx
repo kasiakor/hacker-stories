@@ -42,6 +42,10 @@ const App = () => {
     localStorage.setItem("search", searchTerm);
   }, [searchTerm]);
 
+  const handleClick = () => {
+    console.log("hello");
+  };
+
   return (
     <div>
       <h1>My car collection</h1>
@@ -53,8 +57,14 @@ const App = () => {
       />
       <hr />
       <List list={filteredStories} />
+      <hr />
+      <ButtonComponent onClick={handleClick} />
     </div>
   );
+};
+
+const ButtonComponent = ({ onClick }) => {
+  return <button onClick={onClick}>Click me</button>;
 };
 
 const List = ({ list }) => {
