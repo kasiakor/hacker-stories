@@ -88,10 +88,10 @@ const Search = ({ myTerm, onSearch }) => {
   console.log("search term from Search", myTerm);
 
   return (
-    <div>
+    <>
       <label htmlFor="search">Search: </label>
       <input id="search" type="text" value={myTerm} onChange={onSearch} />
-    </div>
+    </>
   );
 };
 
