@@ -28,6 +28,8 @@ const App = () => {
     localStorage.getItem("search") ?? "react"
   );
 
+  const [currentRadio, setCurrentRadio] = React.useState();
+
   const filteredStories = stories.filter((story) =>
     story.type.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -46,6 +48,15 @@ const App = () => {
     console.log("hello");
   };
 
+  const handleRadio = (event) => {
+    setCurrentRadio(event.target.value);
+  };
+
+  React.useEffect(() => {
+    console.log("current checked radio button", currentRadio);
+    // Do what it needs to be done after updating state here
+  }, [currentRadio]);
+
   return (
     <div>
       <h1>My car collection</h1>
@@ -59,12 +70,43 @@ const App = () => {
       <List list={filteredStories} />
       <hr />
       <ButtonComponent onClick={handleClick} />
+      <hr />
+      <RadioButtonComponent onChange={handleRadio} />
     </div>
   );
 };
 
 const ButtonComponent = ({ onClick }) => {
   return <button onClick={onClick}>Click me</button>;
+};
+
+const RadioButtonComponent = ({ onChange }) => {
+  return (
+    <>
+      <fieldset>
+        <legend>Please select your preferred contact method:</legend>
+        <div onClick={onChange}>
+          <input
+            type="radio"
+            id="contactChoice1"
+            name="contact"
+            value="email"
+          />
+          <label htmlFor="contactChoice1">Email</label>
+          <input
+            type="radio"
+            id="contactChoice2"
+            name="contact"
+            value="phone"
+          />
+          <label htmlFor="contactChoice2">Phone</label>
+
+          <input type="radio" id="contactChoice3" name="contact" value="mail" />
+          <label htmlFor="contactChoice3">Mail</label>
+        </div>
+      </fieldset>
+    </>
+  );
 };
 
 const List = ({ list }) => {
