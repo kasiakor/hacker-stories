@@ -30,7 +30,7 @@ const App = () => {
 
   const [currentRadio, setCurrentRadio] = React.useState();
 
-  const [checked, setChecked] = React.useState();
+  const [checked, setChecked] = React.useState(false);
 
   const filteredStories = stories.filter((story) =>
     story.type.toLowerCase().includes(searchTerm.toLowerCase())
@@ -59,15 +59,10 @@ const App = () => {
     // Do what it needs to be done after updating state here
   }, [currentRadio]);
 
-  const handleCheckbox = (event) => {
-    setChecked(event.target.checked);
-    console.log("checkbox value", event.target.checked);
+  const handleCheckbox = () => {
+    setChecked(!checked);
+    console.log("checkbox value", checked);
   };
-
-  React.useEffect(() => {
-    console.log(checked);
-    // Do what it needs to be done after updating state here
-  }, [checked]);
 
   return (
     <div>
@@ -85,7 +80,12 @@ const App = () => {
       <hr />
       <RadioButtonComponent onChange={handleRadio} />
       <hr />
-      <CheckboxComponent onChange={handleCheckbox} />
+      <CheckboxComponent
+        label="My value"
+        value={checked}
+        onChange={handleCheckbox}
+      />
+      <p>Is My Value checked? {checked.toString()}</p>
     </div>
   );
 };
@@ -123,14 +123,14 @@ const RadioButtonComponent = ({ onChange }) => {
   );
 };
 
-const CheckboxComponent = ({ onChange }) => {
+const CheckboxComponent = ({ label, value, onChange }) => {
   return (
     <>
-      <div onClick={onChange}>
-        <label htmlFor="myCheck1">Vegan</label>
-        <input type="checkbox" id="myCheck"></input>
-        <label htmlFor="myCheck2">Vegetarian</label>
-        <input type="checkbox" id="myCheck"></input>
+      <div>
+        <label>
+          {label}
+          <input type="checkbox" value={value} onClick={onChange}></input>
+        </label>
       </div>
     </>
   );
