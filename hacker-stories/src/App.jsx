@@ -30,6 +30,8 @@ const App = () => {
 
   const [currentRadio, setCurrentRadio] = React.useState();
 
+  const [checked, setChecked] = React.useState();
+
   const filteredStories = stories.filter((story) =>
     story.type.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -57,6 +59,16 @@ const App = () => {
     // Do what it needs to be done after updating state here
   }, [currentRadio]);
 
+  const handleCheckbox = (event) => {
+    setChecked(event.target.checked);
+    console.log("checkbox value", event.target.checked);
+  };
+
+  React.useEffect(() => {
+    console.log(checked);
+    // Do what it needs to be done after updating state here
+  }, [checked]);
+
   return (
     <div>
       <h1>My car collection</h1>
@@ -72,6 +84,8 @@ const App = () => {
       <ButtonComponent onClick={handleClick} />
       <hr />
       <RadioButtonComponent onChange={handleRadio} />
+      <hr />
+      <CheckboxComponent onChange={handleCheckbox} />
     </div>
   );
 };
@@ -105,6 +119,19 @@ const RadioButtonComponent = ({ onChange }) => {
           <label htmlFor="contactChoice3">Mail</label>
         </div>
       </fieldset>
+    </>
+  );
+};
+
+const CheckboxComponent = ({ onChange }) => {
+  return (
+    <>
+      <div onClick={onChange}>
+        <label htmlFor="myCheck1">Vegan</label>
+        <input type="checkbox" id="myCheck"></input>
+        <label htmlFor="myCheck2">Vegetarian</label>
+        <input type="checkbox" id="myCheck"></input>
+      </div>
     </>
   );
 };
