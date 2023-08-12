@@ -32,6 +32,8 @@ const App = () => {
 
   const [checked, setChecked] = React.useState(false);
 
+  const [selected, setSelected] = React.useState();
+
   const filteredStories = stories.filter((story) =>
     story.type.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -53,6 +55,16 @@ const App = () => {
   const handleRadio = (event) => {
     setCurrentRadio(event.target.value);
   };
+
+  const handleSelection = (event) => {
+    setSelected(event.target.value);
+    console.log("selected value from handler", selected);
+  };
+
+  React.useEffect(() => {
+    console.log("selected value from effect", selected);
+    // Do what it needs to be done after updating state here
+  }, [selected]);
 
   React.useEffect(() => {
     console.log("current checked radio button", currentRadio);
@@ -86,6 +98,8 @@ const App = () => {
         onChange={handleCheckbox}
       />
       <p>Is My Value checked? {checked.toString()}</p>
+      <hr />
+      <DropdownComponent onChange={handleSelection} />
     </div>
   );
 };
@@ -132,6 +146,19 @@ const CheckboxComponent = ({ label, value, onChange }) => {
           <input type="checkbox" value={value} onClick={onChange}></input>
         </label>
       </div>
+    </>
+  );
+};
+
+const DropdownComponent = ({ onChange }) => {
+  return (
+    <>
+      <select onChange={onChange}>
+        <option value="0">Select</option>
+        <option value="8">text1</option>
+        <option value="5">text2</option>
+        <option value="4">text3</option>
+      </select>
     </>
   );
 };
