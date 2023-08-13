@@ -81,10 +81,21 @@ const App = () => {
       <h1>My car collection</h1>
       <InputWithLabel
         id="search"
-        label="Search"
         onSearch={handleSearch}
         value={searchTerm}
-      />
+        isFocused
+      >
+        <strong>Search:</strong>
+      </InputWithLabel>
+      <hr/>
+      <InputWithLabel
+        id="search"
+        onSearch={handleSearch}
+        value={searchTerm}
+        isFocused
+      >
+        <strong>Search2:</strong>
+      </InputWithLabel>
       <hr />
       <List list={filteredStories} />
       <hr />
@@ -189,12 +200,26 @@ const Item = ({ item }) => {
   );
 };
 //type is set as default parameter, if it is not passed from the parent
-const InputWithLabel = ({ id, label, value, type = "text", onSearch }) => {
+const InputWithLabel = ({
+  id,
+  value,
+  type = "text",
+  onSearch,
+  children,
+  isFocused,
+}) => {
   console.log("type is:", type);
+  console.log("focused", isFocused);
   return (
     <>
-      <label htmlFor={id}>{label}:</label>
-      <input id={id} type={type} value={value} onChange={onSearch} />
+      <label htmlFor={id}>{children}</label>
+      <input
+        id={id}
+        type={type}
+        value={value}
+        onChange={onSearch}
+        autoFocus={isFocused}
+      />
     </>
   );
 };
