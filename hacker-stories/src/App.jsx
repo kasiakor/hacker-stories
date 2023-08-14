@@ -37,6 +37,8 @@ const App = () => {
 
   const [sliderValue, setValue] = React.useState("");
 
+  const [count, setCount] = React.useState(0);
+
   const [toggle, setToggle] = React.useState(true);
 
   const filteredStories = stories.filter((story) =>
@@ -54,7 +56,8 @@ const App = () => {
   }, [searchTerm]);
 
   const handleClick = () => {
-    console.log("hello");
+    setCount(count + 1);
+    console.log("count", count);
   };
 
   const handleRadio = (event) => {
@@ -112,7 +115,7 @@ const App = () => {
       <hr />
       <List list={filteredStories} />
       <hr />
-      <ButtonComponent onClick={handleClick} />
+      <ButtonComponent onClick={handleClick} count={count} />
       <hr />
       <RadioButtonComponent onChange={handleRadio} />
       <hr />
@@ -142,8 +145,13 @@ const ImageComponent = ({ onClick, toggle }) => {
   );
 };
 
-const ButtonComponent = ({ onClick }) => {
-  return <button onClick={onClick}>Click me</button>;
+const ButtonComponent = ({ count, onClick }) => {
+  return (
+    <>
+      <button onClick={onClick}>Click me</button>
+      <div>{count}</div>
+    </>
+  );
 };
 
 const RadioButtonComponent = ({ onChange }) => {
