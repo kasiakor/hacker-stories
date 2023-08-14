@@ -34,6 +34,8 @@ const App = () => {
 
   const [selected, setSelected] = React.useState();
 
+  const [sliderValue, setValue] = React.useState("");
+
   const filteredStories = stories.filter((story) =>
     story.type.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -76,6 +78,16 @@ const App = () => {
     console.log("checkbox value", checked);
   };
 
+  const handleSlider = (event) => {
+    setValue(event.target.value);
+    console.log("slider value", sliderValue);
+  };
+
+  React.useEffect(() => {
+    console.log("current slider value", sliderValue);
+    // Do what it needs to be done after updating state here
+  }, [sliderValue]);
+
   return (
     <div>
       <h1>My car collection</h1>
@@ -111,6 +123,8 @@ const App = () => {
       <p>Is My Value checked? {checked.toString()}</p>
       <hr />
       <DropdownComponent onChange={handleSelection} />
+      <hr />
+      <SliderComponent onChange={handleSlider} value={sliderValue} />
     </div>
   );
 };
@@ -170,6 +184,23 @@ const DropdownComponent = ({ onChange }) => {
         <option value="5">text2</option>
         <option value="4">text3</option>
       </select>
+    </>
+  );
+};
+
+const SliderComponent = ({ value, onChange }) => {
+  return (
+    <>
+      <div>
+        <p>Default range slider:</p>
+        <input
+          type="range"
+          min="1"
+          max="100"
+          value={value}
+          onChange={onChange}
+        />
+      </div>
     </>
   );
 };
