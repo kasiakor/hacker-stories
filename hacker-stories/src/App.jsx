@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
 import * as React from "react";
+import beachImage from "../src/assets/image_beach.jpg";
 
 const App = () => {
   const stories = [
@@ -35,6 +36,8 @@ const App = () => {
   const [selected, setSelected] = React.useState();
 
   const [sliderValue, setValue] = React.useState("");
+
+  const [toggle, setToggle] = React.useState(true);
 
   const filteredStories = stories.filter((story) =>
     story.type.toLowerCase().includes(searchTerm.toLowerCase())
@@ -88,6 +91,11 @@ const App = () => {
     // Do what it needs to be done after updating state here
   }, [sliderValue]);
 
+  const handleToggle = () => {
+    setToggle(!toggle);
+    console.log("toggled");
+  };
+
   return (
     <div>
       <h1>My car collection</h1>
@@ -125,6 +133,18 @@ const App = () => {
       <DropdownComponent onChange={handleSelection} />
       <hr />
       <SliderComponent onChange={handleSlider} value={sliderValue} />
+      <hr />
+      <ImageComponent onClick={handleToggle} toggle={toggle} />
+    </div>
+  );
+};
+
+const ImageComponent = ({ onClick, toggle }) => {
+  return (
+    <div>
+      <button onClick={onClick}>Toggle image</button>
+      <hr />
+      {toggle && <img alt="beach" src={beachImage} height={150} width={150} />}
     </div>
   );
 };
@@ -244,8 +264,8 @@ const InputWithLabel = ({
   React.useEffect(() => {
     if (isFocused && inputRef.current) {
       inputRef.current.focus();
-      console.log("current", inputRef.current);
-      console.log("current value", inputRef.current.value);
+      // console.log("current", inputRef.current);
+      // console.log("current value", inputRef.current.value);
     }
   }, [isFocused]);
 
