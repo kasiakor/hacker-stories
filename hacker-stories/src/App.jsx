@@ -63,37 +63,30 @@ const App = () => {
 
   const handleSelection = (event) => {
     setSelected(event.target.value);
-    console.log("selected value from handler", selected);
   };
 
   React.useEffect(() => {
-    console.log("selected value from effect", selected);
     // Do what it needs to be done after updating state here
   }, [selected]);
 
   React.useEffect(() => {
-    console.log("current checked radio button", currentRadio);
     // Do what it needs to be done after updating state here
   }, [currentRadio]);
 
   const handleCheckbox = () => {
     setChecked(!checked);
-    console.log("checkbox value", checked);
   };
 
   const handleSlider = (event) => {
     setValue(event.target.value);
-    console.log("slider value", sliderValue);
   };
 
   React.useEffect(() => {
-    console.log("current slider value", sliderValue);
     // Do what it needs to be done after updating state here
   }, [sliderValue]);
 
   const handleToggle = () => {
     setToggle(!toggle);
-    console.log("toggled");
   };
 
   return (
