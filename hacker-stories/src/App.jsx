@@ -4,7 +4,7 @@ import * as React from "react";
 import beachImage from "../src/assets/image_beach.jpg";
 
 const App = () => {
-  const stories = [
+  const initialStories = [
     {
       color: "purple",
       type: "minivan",
@@ -41,9 +41,17 @@ const App = () => {
 
   const [toggle, setToggle] = React.useState(true);
 
+  const [stories, setStories] = React.useState(initialStories);
+
   const filteredStories = stories.filter((story) =>
     story.type.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // event handler to remove the story
+  const handleRemoveStory = (item) => {
+    const newStories = stories.filter((story) => item.cardId !== story.cardId);
+    setStories(newStories);
+  };
 
   // callback handler
 
@@ -113,7 +121,7 @@ const App = () => {
         <strong>Search2:</strong>
       </InputWithLabel>
       <hr />
-      <List list={filteredStories} />
+      <List list={filteredStories} onRemoveItem={handleRemoveStory} />
       <hr />
       <ButtonComponent onClick={handleClick} count={count} />
       <hr />
@@ -226,29 +234,39 @@ const SliderComponent = ({ value, onChange }) => {
   );
 };
 
-const List = ({ list }) => {
+const List = ({ list, onRemoveItem }) => {
   return (
     <ul>
       {/* eslint-disable-next-line react/prop-types */}
       {list.map((item) => (
-        <Item key={item.cardId} item={item} />
+        <Item key={item.cardId} item={item} onRemoveItem={onRemoveItem} />
       ))}
     </ul>
   );
 };
 
-const Item = ({ item }) => {
+const Item = ({ item, onRemoveItem }) => {
+  const handleRemoveItem = () => {
+    onRemoveItem(item);
+    console.log("removed item", item);
+  };
+
   return (
-    <li>
-      {/* eslint-disable-next-line react/prop-types */}
-      <span>{item.type}</span>
-      <br />
-      {/* eslint-disable-next-line react/prop-types */}
-      <span>{item.color} </span>
-      <br />
-      {/* eslint-disable-next-line react/prop-types */}
-      <span>{item.capacity}</span>
-    </li>
+    <>
+      <li>
+        {/* eslint-disable-next-line react/prop-types */}
+        <span>{item.type}</span>
+        <br />
+        {/* eslint-disable-next-line react/prop-types */}
+        <span>{item.color} </span>
+        <br />
+        {/* eslint-disable-next-line react/prop-types */}
+        <span>{item.capacity}</span>
+      </li>
+      <button type="button" onClick={handleRemoveItem}>
+        Remove
+      </button>
+    </>
   );
 };
 //type is set as default parameter, if it is not passed from the parent
