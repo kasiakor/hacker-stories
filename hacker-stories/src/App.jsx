@@ -246,10 +246,10 @@ const List = ({ list, onRemoveItem }) => {
 };
 
 const Item = ({ item, onRemoveItem }) => {
-  const handleRemoveItem = () => {
-    onRemoveItem(item);
-    console.log("removed item", item);
-  };
+  // const handleRemoveItem = () => {
+  //   onRemoveItem(item);
+  //   console.log("removed item", item);
+  // };
 
   return (
     <>
@@ -263,7 +263,13 @@ const Item = ({ item, onRemoveItem }) => {
         {/* eslint-disable-next-line react/prop-types */}
         <span>{item.capacity}</span>
       </li>
-      <button type="button" onClick={handleRemoveItem}>
+      <button
+        type="button"
+        onClick={() => {
+          onRemoveItem(item);
+          console.log("removed item", item.type);
+        }}
+      >
         Remove
       </button>
     </>
