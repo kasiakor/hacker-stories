@@ -4,6 +4,7 @@ import * as React from "react";
 import beachImage from "../src/assets/image_beach.jpg";
 
 const App = () => {
+  console.log("App renders");
   const initialStories = [
     {
       color: "purple",
@@ -41,7 +42,29 @@ const App = () => {
 
   const [toggle, setToggle] = React.useState(true);
 
-  const [stories, setStories] = React.useState(initialStories);
+  const [stories, setStories] = React.useState([]);
+
+  const [state, setState] = React.useState({
+    type: "",
+    color: "",
+    capacity: 0,
+    id: 0,
+  });
+
+  // promise
+  const getAsycStories = () =>
+    new Promise((resolve) =>
+      setTimeout(() => resolve({ data: { stories: initialStories } }), 5000)
+    );
+
+  React.useEffect(() => {
+    getAsycStories().then((result) => {
+      setStories(result.data.stories);
+      console.log("data", result);
+    });
+  }, []);
+
+  // const [type, setType] = React.useState("");
 
   const filteredStories = stories.filter((story) =>
     story.type.toLowerCase().includes(searchTerm.toLowerCase())
@@ -100,6 +123,27 @@ const App = () => {
     setToggle(!toggle);
   };
 
+  // add list item
+  function handleChange(event) {
+    const value = event.target.value;
+    setState({
+      ...state,
+      [event.target.name]: value,
+    });
+    // track input field's state
+    console.log("value", event.target.value);
+  }
+
+  function handleAdd() {
+    // add item
+    const newList = stories.concat(state);
+    setStories(newList);
+  }
+
+  React.useEffect(() => {
+    console.log("new list", stories);
+  }, [stories]);
+
   return (
     <div>
       <h1>My car collection</h1>
@@ -122,6 +166,52 @@ const App = () => {
       </InputWithLabel>
       <hr />
       <List list={filteredStories} onRemoveItem={handleRemoveStory} />
+      <hr />
+      <hr />
+      <div>
+        <label>
+          Car type
+          <input
+            type="text"
+            name="type"
+            value={state.type}
+            onChange={handleChange}
+          />
+        </label>
+        <label>
+          Car color
+          <input
+            type="text"
+            name="color"
+            value={state.color}
+            onChange={handleChange}
+          />
+        </label>
+        <label>
+          Car capacity
+          <input
+            type="number"
+            name="capacity"
+            value={state.capacity}
+            onChange={handleChange}
+            min={2}
+          />
+        </label>
+        <label>
+          Car id
+          <input
+            type="number"
+            name="cardId"
+            value={state.cardId}
+            onChange={handleChange}
+            min={8}
+          />
+        </label>
+        <button type="button" onClick={handleAdd}>
+          Add
+        </button>
+      </div>
+
       <hr />
       <ButtonComponent onClick={handleClick} count={count} />
       <hr />
@@ -246,11 +336,6 @@ const List = ({ list, onRemoveItem }) => {
 };
 
 const Item = ({ item, onRemoveItem }) => {
-  // const handleRemoveItem = () => {
-  //   onRemoveItem(item);
-  //   console.log("removed item", item);
-  // };
-
   return (
     <>
       <li>
