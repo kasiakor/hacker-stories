@@ -42,7 +42,7 @@ const App = () => {
 
   const [toggle, setToggle] = React.useState(true);
 
-  const [stories, setStories] = React.useState([]);
+  // const [stories, setStories] = React.useState([]);
 
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -55,6 +55,17 @@ const App = () => {
     id: 0,
   });
 
+  const storiesReducer = (state, action) => {
+    if (action.type === "SET_STORIES") {
+      return action.payload;
+    } else {
+      throw new Error();
+    }
+  };
+
+  // reducer
+  const [stories, dispatchStories] = React.useReducer(storiesReducer, []);
+
   // promise
   const getAsycStories = () =>
     new Promise((resolve) =>
@@ -65,7 +76,8 @@ const App = () => {
     setIsLoading(true);
     getAsycStories()
       .then((result) => {
-        setStories(result.data.stories);
+        // action is dispatched by updater
+        dispatchStories({ type: "SET_STORIES", payload: result.data.stories });
         console.log("data", result);
         setIsLoading(false);
       })
@@ -81,7 +93,7 @@ const App = () => {
   // event handler to remove the story
   const handleRemoveStory = (item) => {
     const newStories = stories.filter((story) => item.cardId !== story.cardId);
-    setStories(newStories);
+    dispatchStories({ type: "SET_STORIES", payload: newStories });
   };
 
   // callback handler
@@ -145,7 +157,7 @@ const App = () => {
   function handleAdd() {
     // add item
     const newList = stories.concat(state);
-    setStories(newList);
+    dispatchStories({ type: "SET_STORIES", payload: newList });
   }
 
   React.useEffect(() => {
