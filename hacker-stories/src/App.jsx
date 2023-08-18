@@ -44,6 +44,8 @@ const App = () => {
 
   const [stories, setStories] = React.useState([]);
 
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const [state, setState] = React.useState({
     type: "",
     color: "",
@@ -58,9 +60,11 @@ const App = () => {
     );
 
   React.useEffect(() => {
+    setIsLoading(true);
     getAsycStories().then((result) => {
       setStories(result.data.stories);
       console.log("data", result);
+      setIsLoading(false);
     });
   }, []);
 
@@ -165,7 +169,11 @@ const App = () => {
         <strong>Search2:</strong>
       </InputWithLabel>
       <hr />
-      <List list={filteredStories} onRemoveItem={handleRemoveStory} />
+      {isLoading ? (
+        <p>data is loading ....</p>
+      ) : (
+        <List list={filteredStories} onRemoveItem={handleRemoveStory} />
+      )}
       <hr />
       <hr />
       <div>
