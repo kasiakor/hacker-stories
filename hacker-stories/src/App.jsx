@@ -46,6 +46,8 @@ const App = () => {
 
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const [isError, setIsError] = React.useState(false);
+
   const [state, setState] = React.useState({
     type: "",
     color: "",
@@ -61,11 +63,13 @@ const App = () => {
 
   React.useEffect(() => {
     setIsLoading(true);
-    getAsycStories().then((result) => {
-      setStories(result.data.stories);
-      console.log("data", result);
-      setIsLoading(false);
-    });
+    getAsycStories()
+      .then((result) => {
+        setStories(result.data.stories);
+        console.log("data", result);
+        setIsLoading(false);
+      })
+      .catch(() => setIsError(true));
   }, []);
 
   // const [type, setType] = React.useState("");
@@ -169,6 +173,7 @@ const App = () => {
         <strong>Search2:</strong>
       </InputWithLabel>
       <hr />
+      {isError && <p>Ups sth went wrong</p>}
       {isLoading ? (
         <p>data is loading ....</p>
       ) : (
@@ -219,7 +224,6 @@ const App = () => {
           Add
         </button>
       </div>
-
       <hr />
       <ButtonComponent onClick={handleClick} count={count} />
       <hr />
