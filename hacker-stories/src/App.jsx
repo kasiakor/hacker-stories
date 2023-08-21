@@ -55,16 +55,25 @@ const App = () => {
     id: 0,
   });
 
+  // reducer
+
   const storiesReducer = (state, action) => {
-    if (action.type === "SET_STORIES") {
-      return action.payload;
-    } else {
-      throw new Error();
+    switch (action.type) {
+      case "SET_STORIES":
+        return action.payload;
+      case "REMOVE_STORY":
+        return stories.filter(
+          (story) => action.payload.cardId !== story.cardId
+        );
+      default:
+        throw new Error();
     }
   };
-
-  // reducer
   const [stories, dispatchStories] = React.useReducer(storiesReducer, []);
+
+  const filteredStories = stories.filter((story) =>
+    story.type.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // promise
   const getAsycStories = () =>
@@ -84,16 +93,9 @@ const App = () => {
       .catch(() => setIsError(true));
   }, []);
 
-  // const [type, setType] = React.useState("");
-
-  const filteredStories = stories.filter((story) =>
-    story.type.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   // event handler to remove the story
   const handleRemoveStory = (item) => {
-    const newStories = stories.filter((story) => item.cardId !== story.cardId);
-    dispatchStories({ type: "SET_STORIES", payload: newStories });
+    dispatchStories({ type: "REMOVE_STORY", payload: item });
   };
 
   // callback handler
