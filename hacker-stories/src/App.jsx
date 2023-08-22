@@ -5,26 +5,26 @@ import beachImage from "../src/assets/image_beach.jpg";
 
 const App = () => {
   console.log("App renders");
-  const initialStories = [
-    {
-      color: "purple",
-      type: "minivan",
-      capacity: 7,
-      cardId: 1,
-    },
-    {
-      color: "red",
-      type: "sedan",
-      capacity: 4,
-      cardId: 2,
-    },
-    {
-      color: "blue",
-      type: "cabrio",
-      capacity: 2,
-      cardId: 3,
-    },
-  ];
+  // const initialStories = [
+  //   {
+  //     color: "purple",
+  //     type: "minivan",
+  //     capacity: 7,
+  //     cardId: 1,
+  //   },
+  //   {
+  //     color: "red",
+  //     type: "sedan",
+  //     capacity: 4,
+  //     cardId: 2,
+  //   },
+  //   {
+  //     color: "blue",
+  //     type: "cabrio",
+  //     capacity: 2,
+  //     cardId: 3,
+  //   },
+  // ];
 
   const [searchTerm, setSearchTerm] = React.useState(
     localStorage.getItem("search") ?? "react"
@@ -44,9 +44,9 @@ const App = () => {
 
   // const [stories, setStories] = React.useState([]);
 
-  const [isLoading, setIsLoading] = React.useState(false);
+  // const [isLoading, setIsLoading] = React.useState(false);
 
-  const [isError, setIsError] = React.useState(false);
+  // const [isError, setIsError] = React.useState(false);
 
   const [state, setState] = React.useState({
     type: "",
@@ -59,38 +59,75 @@ const App = () => {
 
   const storiesReducer = (state, action) => {
     switch (action.type) {
-      case "SET_STORIES":
-        return action.payload;
+      case "STORIES_FETCH_INIT":
+        return {
+          ...state,
+          isLoading: true,
+          isError: false,
+        };
+      case "STORIES_FETCH_SUCCESS":
+        return {
+          ...state,
+          isLoading: false,
+          isError: false,
+          data: action.payload,
+        };
+
+      case "STORIES_FETCH_FAILURE":
+        return {
+          ...state,
+          isLoading: false,
+          isError: true,
+        };
+
       case "REMOVE_STORY":
-        return stories.filter(
-          (story) => action.payload.cardId !== story.cardId
-        );
+        return {
+          ...state,
+          // state is an object now
+          data: state.data.filter(
+            (story) => action.payload.cardId !== story.cardId
+          ),
+        };
+
       default:
         throw new Error();
     }
   };
-  const [stories, dispatchStories] = React.useReducer(storiesReducer, []);
+  const [stories, dispatchStories] = React.useReducer(storiesReducer, {
+    data: [],
+    isLoading: false,
+    isError: false,
+  });
 
-  const filteredStories = stories.filter((story) =>
+  const filteredStories = stories.data.filter((story) =>
     story.type.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // promise
   const getAsycStories = () =>
-    new Promise((resolve) =>
-      setTimeout(() => resolve({ data: { stories: initialStories } }), 5000)
-    );
+    new Promise((resolve, reject) => setTimeout(reject, 5000));
 
   React.useEffect(() => {
-    setIsLoading(true);
+    // setIsLoading(true);
+    dispatchStories({ type: "STORIES_FETCH_INIT" });
     getAsycStories()
       .then((result) => {
         // action is dispatched by updater
-        dispatchStories({ type: "SET_STORIES", payload: result.data.stories });
-        console.log("data", result);
-        setIsLoading(false);
+        dispatchStories({
+          type: "STORIES_FETCH_SUCCESS",
+          payload: result.data.stories,
+        });
+        console.log("result", result);
+        // result {data: {…}}
+        console.log("data", result.data);
+        // data {stories: Array(3)}
+        console.log("stories", result.data.stories);
+        // stories (3)[{…}, {…}, {…}]
       })
-      .catch(() => setIsError(true));
+      .catch(
+        () => console.log("error", Error),
+        dispatchStories({ type: "STORIES_FETCH_FAILURE" })
+      );
   }, []);
 
   // event handler to remove the story
@@ -187,8 +224,8 @@ const App = () => {
         <strong>Search2:</strong>
       </InputWithLabel>
       <hr />
-      {isError && <p>Ups sth went wrong</p>}
-      {isLoading ? (
+      {stories.isError && <p>Ups sth went wrong</p>}
+      {stories.isLoading ? (
         <p>data is loading ....</p>
       ) : (
         <List list={filteredStories} onRemoveItem={handleRemoveStory} />
