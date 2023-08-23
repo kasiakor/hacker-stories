@@ -3,28 +3,10 @@
 import * as React from "react";
 import beachImage from "../src/assets/image_beach.jpg";
 
+const API_ENDPOINT = "http://hn.algolia.com/api/v1/search?query=";
+
 const App = () => {
   console.log("App renders");
-  // const initialStories = [
-  //   {
-  //     color: "purple",
-  //     type: "minivan",
-  //     capacity: 7,
-  //     cardId: 1,
-  //   },
-  //   {
-  //     color: "red",
-  //     type: "sedan",
-  //     capacity: 4,
-  //     cardId: 2,
-  //   },
-  //   {
-  //     color: "blue",
-  //     type: "cabrio",
-  //     capacity: 2,
-  //     cardId: 3,
-  //   },
-  // ];
 
   const [searchTerm, setSearchTerm] = React.useState(
     localStorage.getItem("search") ?? "react"
@@ -41,12 +23,6 @@ const App = () => {
   const [count, setCount] = React.useState(0);
 
   const [toggle, setToggle] = React.useState(true);
-
-  // const [stories, setStories] = React.useState([]);
-
-  // const [isLoading, setIsLoading] = React.useState(false);
-
-  // const [isError, setIsError] = React.useState(false);
 
   const [state, setState] = React.useState({
     type: "",
@@ -99,36 +75,29 @@ const App = () => {
     isError: false,
   });
 
-  const filteredStories = stories.data.filter((story) =>
-    story.type.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  // promise
-  const getAsycStories = () =>
-    new Promise((resolve, reject) => setTimeout(reject, 5000));
-
   React.useEffect(() => {
+    // prevent request form being fired, null, undefined, empy string..
+    if (!searchTerm) return;
     // setIsLoading(true);
     dispatchStories({ type: "STORIES_FETCH_INIT" });
-    getAsycStories()
+    fetch(`${API_ENDPOINT}${searchTerm}`)
+      .then((response) => response.json())
       .then((result) => {
         // action is dispatched by updater
         dispatchStories({
           type: "STORIES_FETCH_SUCCESS",
-          payload: result.data.stories,
+          payload: result.hits,
         });
         console.log("result", result);
-        // result {data: {…}}
-        console.log("data", result.data);
-        // data {stories: Array(3)}
-        console.log("stories", result.data.stories);
-        // stories (3)[{…}, {…}, {…}]
+        // result {hits: Array(20), nbHits: 300392, page: 0, nbPages: 50, hitsPerPage: 20,…}
+        console.log("hits", result.hits);
+        // (20)[{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
       })
       .catch(
         () => console.log("error", Error),
         dispatchStories({ type: "STORIES_FETCH_FAILURE" })
       );
-  }, []);
+  }, [searchTerm]);
 
   // event handler to remove the story
   const handleRemoveStory = (item) => {
@@ -200,12 +169,13 @@ const App = () => {
   }
 
   React.useEffect(() => {
-    console.log("new list", stories);
+    console.log("new list/stories/state", stories);
+    // list/stories/state {data: Array(20), isLoading: false, isError: false}
   }, [stories]);
 
   return (
     <div>
-      <h1>My car collection</h1>
+      <h1>Hacker News</h1>
       <InputWithLabel
         id="search"
         onSearch={handleSearch}
@@ -228,7 +198,7 @@ const App = () => {
       {stories.isLoading ? (
         <p>data is loading ....</p>
       ) : (
-        <List list={filteredStories} onRemoveItem={handleRemoveStory} />
+        <List list={stories.data} onRemoveItem={handleRemoveStory} />
       )}
       <hr />
       <hr />
@@ -403,7 +373,7 @@ const Item = ({ item, onRemoveItem }) => {
     <>
       <li>
         {/* eslint-disable-next-line react/prop-types */}
-        <span>{item.type}</span>
+        <span>{item.title}</span>
         <br />
         {/* eslint-disable-next-line react/prop-types */}
         <span>{item.color} </span>
@@ -415,7 +385,7 @@ const Item = ({ item, onRemoveItem }) => {
         type="button"
         onClick={() => {
           onRemoveItem(item);
-          console.log("removed item", item.type);
+          console.log("removed item", item.title);
         }}
       >
         Remove
