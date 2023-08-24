@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
 import * as React from "react";
+import { useCallback } from "react";
 import beachImage from "../src/assets/image_beach.jpg";
 
 const API_ENDPOINT = "http://hn.algolia.com/api/v1/search?query=";
@@ -75,7 +76,7 @@ const App = () => {
     isError: false,
   });
 
-  React.useEffect(() => {
+  const handleFetchStories = useCallback(() => {
     // prevent request form being fired, null, undefined, empy string..
     if (!searchTerm) return;
     // setIsLoading(true);
@@ -99,13 +100,16 @@ const App = () => {
       );
   }, [searchTerm]);
 
+  React.useEffect(() => {
+    handleFetchStories();
+  }, [handleFetchStories]);
+
   // event handler to remove the story
   const handleRemoveStory = (item) => {
     dispatchStories({ type: "REMOVE_STORY", payload: item });
   };
 
   // callback handler
-
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -114,10 +118,15 @@ const App = () => {
     localStorage.setItem("search", searchTerm);
   }, [searchTerm]);
 
-  const handleClick = () => {
-    setCount(count + 1);
-    console.log("count", count);
-  };
+  const handleClick = useCallback(
+    (event) => {
+      setCount(count + 1);
+      console.log("count", count);
+      console.log("handleClick", handleClick);
+      console.log("Clicked! event current", event.currentTarget);
+    },
+    [count]
+  );
 
   const handleRadio = (event) => {
     setCurrentRadio(event.target.value);
