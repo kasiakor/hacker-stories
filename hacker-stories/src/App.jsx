@@ -79,32 +79,26 @@ const App = () => {
     isError: false,
   });
 
-  const handleFetchStories = useCallback(() => {
-    // prevent request form being fired, null, undefined, empy string..
-    if (!searchTerm) return;
-    // setIsLoading(true);
+  const handleFetchStories = useCallback(async () => {
     dispatchStories({ type: "STORIES_FETCH_INIT" });
-    axios
-      .get(url)
+
+    try {
+      const result = await axios.get(url);
       // respose object
-      .then((result) => {
-        // action is dispatched by updater
-        dispatchStories({
-          type: "STORIES_FETCH_SUCCESS",
-          payload: result.data.hits,
-        });
-        console.log("result", result);
-        // response object can have the following properties
-        // result {data: {…}, status: 200, statusText: '', headers: AxiosHeaders, config: {…},…}
-        console.log("result.data", result.data);
-        // {hits: Array(20), nbHits: 5558, page: 0, nbPages: 50, hitsPerPage: 20,…}
-        console.log("status", result.status);
-        // status 200
-      })
-      .catch(
-        () => console.log("error", Error),
-        dispatchStories({ type: "STORIES_FETCH_FAILURE" })
-      );
+      dispatchStories({
+        type: "STORIES_FETCH_SUCCESS",
+        payload: result.data.hits,
+      });
+      console.log("result", result);
+      // response object can have the following properties
+      // result {data: {…}, status: 200, statusText: '', headers: AxiosHeaders, config: {…},…}
+      console.log("result.data", result.data);
+      // {hits: Array(20), nbHits: 5558, page: 0, nbPages: 50, hitsPerPage: 20,…}
+      console.log("status", result.status);
+      // status 200
+    } catch {
+      dispatchStories({ type: "STORIES_FETCH_FAILURE" });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url]);
 
