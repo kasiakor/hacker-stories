@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
 import * as React from "react";
+import axios from "axios";
 import { useCallback } from "react";
 import beachImage from "../src/assets/image_beach.jpg";
 
@@ -83,23 +84,28 @@ const App = () => {
     if (!searchTerm) return;
     // setIsLoading(true);
     dispatchStories({ type: "STORIES_FETCH_INIT" });
-    fetch(url)
-      .then((response) => response.json())
+    axios
+      .get(url)
+      // respose object
       .then((result) => {
         // action is dispatched by updater
         dispatchStories({
           type: "STORIES_FETCH_SUCCESS",
-          payload: result.hits,
+          payload: result.data.hits,
         });
         console.log("result", result);
-        // result {hits: Array(20), nbHits: 300392, page: 0, nbPages: 50, hitsPerPage: 20,…}
-        console.log("hits", result.hits);
-        // (20)[{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+        // response object can have the following properties
+        // result {data: {…}, status: 200, statusText: '', headers: AxiosHeaders, config: {…},…}
+        console.log("result.data", result.data);
+        // {hits: Array(20), nbHits: 5558, page: 0, nbPages: 50, hitsPerPage: 20,…}
+        console.log("status", result.status);
+        // status 200
       })
       .catch(
         () => console.log("error", Error),
         dispatchStories({ type: "STORIES_FETCH_FAILURE" })
       );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url]);
 
   React.useEffect(() => {
