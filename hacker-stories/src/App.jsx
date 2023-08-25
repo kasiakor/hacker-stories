@@ -32,6 +32,8 @@ const App = () => {
     id: 0,
   });
 
+  const [url, setUrl] = React.useState();
+
   // reducer
 
   const storiesReducer = (state, action) => {
@@ -81,7 +83,7 @@ const App = () => {
     if (!searchTerm) return;
     // setIsLoading(true);
     dispatchStories({ type: "STORIES_FETCH_INIT" });
-    fetch(`${API_ENDPOINT}${searchTerm}`)
+    fetch(url)
       .then((response) => response.json())
       .then((result) => {
         // action is dispatched by updater
@@ -98,7 +100,7 @@ const App = () => {
         () => console.log("error", Error),
         dispatchStories({ type: "STORIES_FETCH_FAILURE" })
       );
-  }, [searchTerm]);
+  }, [url]);
 
   React.useEffect(() => {
     handleFetchStories();
@@ -182,26 +184,32 @@ const App = () => {
     // list/stories/state {data: Array(20), isLoading: false, isError: false}
   }, [stories]);
 
+  // handling input change for search
+  const handleSearchInput = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  // sumbit search term
+  const handleSearchSubmit = () => {
+    setUrl(`${API_ENDPOINT}searchTerm`);
+  };
+
   return (
     <div>
       <h1>Hacker News</h1>
       <InputWithLabel
         id="search"
         onSearch={handleSearch}
-        value={searchTerm}
+        onInputChange={handleSearchInput}
         isFocused
+        disabled={!searchTerm}
       >
         <strong>Search:</strong>
       </InputWithLabel>
       <hr />
-      <InputWithLabel
-        id="search"
-        onSearch={handleSearch}
-        value={searchTerm}
-        isFocused
-      >
-        <strong>Search2:</strong>
-      </InputWithLabel>
+      <button type="button" onClick={handleSearchSubmit}>
+        Submit
+      </button>
       <hr />
       {stories.isError && <p>Ups sth went wrong</p>}
       {stories.isLoading ? (
