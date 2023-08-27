@@ -184,32 +184,21 @@ const App = () => {
     // list/stories/state {data: Array(20), isLoading: false, isError: false}
   }, [stories]);
 
-  // handling input change for search
-  const handleSearchInput = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
   // sumbit search term
-  const handleSearchSubmit = () => {
+  const handleSearchSubmit = (event) => {
     setUrl(`${API_ENDPOINT}searchTerm`);
+    event.preventDefault();
+    console.log("set search state", searchTerm);
   };
 
   return (
     <div>
       <h1>Hacker News</h1>
-      <InputWithLabel
-        id="search"
-        onSearch={handleSearch}
-        onInputChange={handleSearchInput}
-        isFocused
-        disabled={!searchTerm}
-      >
-        <strong>Search:</strong>
-      </InputWithLabel>
-      <hr />
-      <button type="button" onClick={handleSearchSubmit}>
-        Submit
-      </button>
+      <SearchForm
+        searchTerm={searchTerm}
+        onSearchInput={handleSearch}
+        onSearchSubmit={handleSearchSubmit}
+      ></SearchForm>
       <hr />
       {stories.isError && <p>Ups sth went wrong</p>}
       {stories.isLoading ? (
@@ -282,6 +271,18 @@ const App = () => {
     </div>
   );
 };
+
+const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit }) => (
+  <form onSubmit={onSearchSubmit}>
+    <InputWithLabel id="search" onSearch={onSearchInput} isFocused>
+      <strong>Search:</strong>
+    </InputWithLabel>
+    <hr />
+    <button type="submit" disabled={!searchTerm}>
+      Submit
+    </button>
+  </form>
+);
 
 const ImageComponent = ({ onClick, toggle }) => {
   return (
