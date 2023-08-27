@@ -30,7 +30,7 @@ const App = () => {
     type: "",
     color: "",
     capacity: 0,
-    id: 0,
+    objectId: 0,
   });
 
   const [url, setUrl] = React.useState();
@@ -65,7 +65,7 @@ const App = () => {
           ...state,
           // state is an object now
           data: state.data.filter(
-            (story) => action.payload.cardId !== story.cardId
+            (story) => action.payload.objectID !== story.objectID
           ),
         };
 
@@ -241,8 +241,8 @@ const App = () => {
           Car id
           <input
             type="number"
-            name="cardId"
-            value={state.cardId}
+            name="objectId"
+            value={state.objectId}
             onChange={handleChange}
             min={8}
           />
@@ -380,7 +380,7 @@ const List = ({ list, onRemoveItem }) => {
     <ul>
       {/* eslint-disable-next-line react/prop-types */}
       {list.map((item) => (
-        <Item key={item.cardId} item={item} onRemoveItem={onRemoveItem} />
+        <Item key={item.objectId} item={item} onRemoveItem={onRemoveItem} />
       ))}
     </ul>
   );
@@ -403,7 +403,7 @@ const Item = ({ item, onRemoveItem }) => {
         type="button"
         onClick={() => {
           onRemoveItem(item);
-          console.log("removed item", item.title);
+          console.log("removed item", item.objectID);
         }}
       >
         Remove
