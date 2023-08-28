@@ -4,6 +4,7 @@ import * as React from "react";
 import axios from "axios";
 import { useCallback } from "react";
 import beachImage from "../src/assets/image_beach.jpg";
+import "./App.css";
 
 const API_ENDPOINT = "http://hn.algolia.com/api/v1/search?query=";
 
@@ -189,11 +190,12 @@ const App = () => {
     setUrl(`${API_ENDPOINT}searchTerm`);
     event.preventDefault();
     console.log("set search state", searchTerm);
+    console.log("form", event.target.elements);
   };
 
   return (
-    <div>
-      <h1>Hacker News</h1>
+    <div className="container">
+      <h1 className="headline-primary">Hacker News</h1>
       <SearchForm
         searchTerm={searchTerm}
         onSearchInput={handleSearch}
@@ -252,7 +254,11 @@ const App = () => {
         </button>
       </div>
       <hr />
-      <ButtonComponent onClick={handleClick} count={count} />
+      <ButtonComponent
+        onClick={handleClick}
+        count={count}
+        className={"button_small"}
+      />
       <hr />
       <RadioButtonComponent onChange={handleRadio} />
       <hr />
@@ -273,12 +279,16 @@ const App = () => {
 };
 
 const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit }) => (
-  <form onSubmit={onSearchSubmit}>
+  <form onSubmit={onSearchSubmit} className="search-form">
     <InputWithLabel id="search" onSearch={onSearchInput} isFocused>
       <strong>Search:</strong>
     </InputWithLabel>
     <hr />
-    <button type="submit" disabled={!searchTerm}>
+    <button
+      type="submit"
+      disabled={!searchTerm}
+      className="button button_large"
+    >
       Submit
     </button>
   </form>
@@ -294,10 +304,12 @@ const ImageComponent = ({ onClick, toggle }) => {
   );
 };
 
-const ButtonComponent = ({ count, onClick }) => {
+const ButtonComponent = ({ count, onClick, className }) => {
   return (
     <>
-      <button onClick={onClick}>Click me</button>
+      <button onClick={onClick} className={className}>
+        Click me
+      </button>
       <div>{count}</div>
     </>
   );
@@ -389,25 +401,31 @@ const List = ({ list, onRemoveItem }) => {
 const Item = ({ item, onRemoveItem }) => {
   return (
     <>
-      <li>
+      <li className="item">
+        <span style={{ width: "40%" }}>
+          <a href={item.url}>{item.title}</a>
+        </span>
         {/* eslint-disable-next-line react/prop-types */}
-        <span>{item.title}</span>
+        <span style={{ width: "30%" }}>{item.author}</span>
         <br />
         {/* eslint-disable-next-line react/prop-types */}
-        <span>{item.color} </span>
+        <span style={{ width: "10%" }}>{item.num_comments} </span>
         <br />
         {/* eslint-disable-next-line react/prop-types */}
-        <span>{item.capacity}</span>
+        <span style={{ width: "10%" }}>{item.points}</span>
+        <span style={{ width: "10%" }}>
+          <button
+            type="button"
+            onClick={() => {
+              onRemoveItem(item);
+              console.log("removed item", item.objectID);
+            }}
+            className="button_small"
+          >
+            Remove
+          </button>
+        </span>
       </li>
-      <button
-        type="button"
-        onClick={() => {
-          onRemoveItem(item);
-          console.log("removed item", item.objectID);
-        }}
-      >
-        Remove
-      </button>
     </>
   );
 };
@@ -432,13 +450,16 @@ const InputWithLabel = ({
 
   return (
     <>
-      <label htmlFor={id}>{children}</label>
+      <label htmlFor={id} className="label">
+        {children}
+      </label>
       <input
         ref={inputRef}
         id={id}
         type={type}
         value={value}
         onChange={onSearch}
+        className="input"
       />
     </>
   );
