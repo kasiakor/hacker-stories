@@ -274,6 +274,8 @@ const App = () => {
       <SliderComponent onChange={handleSlider} value={sliderValue} />
       <hr />
       <ImageComponent onClick={handleToggle} toggle={toggle} />
+      <hr />
+      <RefComponent />
     </div>
   );
 };
@@ -462,6 +464,22 @@ const InputWithLabel = ({
         className="input"
       />
     </>
+  );
+};
+
+const RefComponent = () => {
+  const inputRef = React.useRef(null);
+
+  React.useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
+  return (
+    <input
+      ref={inputRef}
+      placeholder="Type something"
+      className="imput"
+    ></input>
   );
 };
 
