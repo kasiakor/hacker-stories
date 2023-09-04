@@ -5,11 +5,43 @@ import axios from "axios";
 import { useCallback } from "react";
 import beachImage from "../src/assets/image_beach.jpg";
 import "./App.css";
+import { v4 as uuidv4 } from "react-uuid";
 
 const API_ENDPOINT = "http://hn.algolia.com/api/v1/search?query=";
 
+// usememo
+const users = [
+  { id: "a", name: "Robin" },
+  { id: "b", name: "Dennis" },
+];
+
 const App = () => {
-  console.log("App renders");
+  console.log("App rendered");
+  // usememo
+  const [text, setText] = React.useState("");
+  const [search, setSearch] = React.useState("");
+
+  const [players, setPlayers] = React.useState([
+    { id: "a", name: "Robin" },
+    { id: "b", name: "Dennis" },
+  ]);
+
+  const handleText = (event) => {
+    setText(event.target.value);
+  };
+
+  const handlememoSearch = () => {
+    setSearch(text);
+  };
+
+  const filteredUsers = React.useMemo(
+    () =>
+      users.filter((user) => {
+        console.log("Filter function is running ...");
+        return user.name.toLowerCase().includes(search.toLowerCase());
+      }),
+    [search]
+  );
 
   const [searchTerm, setSearchTerm] = React.useState(
     localStorage.getItem("search") ?? "react"
@@ -90,13 +122,6 @@ const App = () => {
         type: "STORIES_FETCH_SUCCESS",
         payload: result.data.hits,
       });
-      console.log("result", result);
-      // response object can have the following properties
-      // result {data: {…}, status: 200, statusText: '', headers: AxiosHeaders, config: {…},…}
-      console.log("result.data", result.data);
-      // {hits: Array(20), nbHits: 5558, page: 0, nbPages: 50, hitsPerPage: 20,…}
-      console.log("status", result.status);
-      // status 200
     } catch {
       dispatchStories({ type: "STORIES_FETCH_FAILURE" });
     }
@@ -124,9 +149,6 @@ const App = () => {
   const handleClick = useCallback(
     (event) => {
       setCount(count + 1);
-      console.log("count", count);
-      console.log("handleClick", handleClick);
-      console.log("Clicked! event current", event.currentTarget);
     },
     [count]
   );
@@ -171,7 +193,6 @@ const App = () => {
       [event.target.name]: value,
     });
     // track input field's state
-    console.log("value", event.target.value);
   }
 
   function handleAdd() {
@@ -181,7 +202,6 @@ const App = () => {
   }
 
   React.useEffect(() => {
-    console.log("new list/stories/state", stories);
     // list/stories/state {data: Array(20), isLoading: false, isError: false}
   }, [stories]);
 
@@ -189,12 +209,31 @@ const App = () => {
   const handleSearchSubmit = (event) => {
     setUrl(`${API_ENDPOINT}searchTerm`);
     event.preventDefault();
-    console.log("set search state", searchTerm);
-    console.log("form", event.target.elements);
+  };
+
+  const handleAddPlayer = () => {
+    setPlayers(players.concat({ id: uuidv4, name: text }));
   };
 
   return (
     <div className="container">
+      <div>
+        <input type="text" value={text} onChange={handleText} />
+        <button
+          type="button"
+          onClick={handlememoSearch}
+          className="button_small"
+        >
+          Search User
+        </button>
+        <button type="button" onClick={handleAddPlayer}>
+          Add Player
+        </button>
+        <div>Players</div>
+        <ListPlay listplay={players} />
+        <div>Users</div>
+        <ListMemo listmemo={filteredUsers} />
+      </div>
       <h1 className="headline-primary">Hacker News</h1>
       <SearchForm
         searchTerm={searchTerm}
@@ -278,6 +317,20 @@ const App = () => {
       <RefComponent />
     </div>
   );
+};
+
+const ListMemo = ({ listmemo }) => {
+  return (
+    <ul>
+      {listmemo.map((item) => (
+        <ListItem key={item.id} item={item} />
+      ))}
+    </ul>
+  );
+};
+
+const ListItem = ({ item }) => {
+  return <li>{item.name}</li>;
 };
 
 const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit }) => (
@@ -389,8 +442,8 @@ const SliderComponent = ({ value, onChange }) => {
   );
 };
 
-const List = ({ list, onRemoveItem }) => {
-  return (
+const List = ({ list, onRemoveItem }) =>
+  console.log("B: List") || (
     <ul>
       {/* eslint-disable-next-line react/prop-types */}
       {list.map((item) => (
@@ -398,7 +451,6 @@ const List = ({ list, onRemoveItem }) => {
       ))}
     </ul>
   );
-};
 
 const Item = ({ item, onRemoveItem }) => {
   return (
@@ -420,7 +472,6 @@ const Item = ({ item, onRemoveItem }) => {
             type="button"
             onClick={() => {
               onRemoveItem(item);
-              console.log("removed item", item.objectID);
             }}
             className="button_small"
           >
@@ -445,8 +496,6 @@ const InputWithLabel = ({
   React.useEffect(() => {
     if (isFocused && inputRef.current) {
       inputRef.current.focus();
-      // console.log("current", inputRef.current);
-      // console.log("current value", inputRef.current.value);
     }
   }, [isFocused]);
 
@@ -481,6 +530,23 @@ const RefComponent = () => {
       className="imput"
     ></input>
   );
+};
+
+const ListPlay = ({ listplay }) => {
+  console.log("ListPlay rendered");
+  return (
+    <ul>
+      {listplay.map((item) => (
+        <ListPlayItem key={item.id} item={item} />
+      ))}
+    </ul>
+  );
+};
+
+const ListPlayItem = ({ item }) => {
+  console.log("ListPlayItem rendered");
+
+  return <li>{item.name}</li>;
 };
 
 export default App;
